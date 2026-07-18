@@ -4,15 +4,26 @@
 #include <shlobj.h>
 
 
+void rename(char* source, char* destination)
+{
+	MoveFileA(source, destination);
+}
+void rmdir(char* name)
+{
+	RemoveDirectoryA(name);
+}
+
 void help()
 {
 
 	printf("Available commands: \n");
-	printf("mkdir <name> - create new directory\n");
 	printf("ls - shows all the files in the current directory\n");
 	printf("cd <path> - change directory\n");
-
+	printf("mkdir <name> - create new directory\n");
+	printf("rmdir <name> - remove directory\n");
+	printf("rename <currentfilename> <newfilename> - rename file\n");
 }
+
 void mkdir(char* name)
 {
 	CreateDirectoryA(name, NULL);
@@ -41,6 +52,7 @@ int main() {
 	char input[256];
 	char home[MAX_PATH];
 	char path[256];
+	
 
 	SHGetFolderPathA(      // basically makes it so that the shell starts in the user's home directory instead of hardcoding it
 		NULL,
@@ -57,7 +69,7 @@ int main() {
 		char* argv[10]; // array of strings to hold command and arguments
 		int argc = 0; // argument counter
 		GetCurrentDirectoryA(256, path); // get current directory
-		printf("%s Shell >",path);
+		printf("%s Shell >", path);
 
 		fgets(input, sizeof(input), stdin); // read user input
 		input[strcspn(input, "\n")] = '\0';
@@ -66,27 +78,22 @@ int main() {
 		// parsing
 		char* command = strtok(input, " "); // this basically gets the first word of the input (the command)
 		char* arg = strtok(NULL, " "); // this gets the second word of the input (the argument)
-
+		char* folder = strtok(NULL, " "); // this gets the third word of the input (the folder name for the mv command)
 		argv[argc] = command;
 		argc++;
 		argv[argc] = arg;         // fill argv with the command and the argument
 		argc++;
-
-		 // this whole block of code is about the cd command
+		argv[argc] = folder; // specifically designed for the mv command
+		argc++;
+		// this whole block of code is about the cd command
 
 		if (strcmp(argv[0], "cd") == 0)
 		{
-
-			printf("directory: %s\n", argv[1]);
-			if(cd(argv[1]) == 0)
+			if (cd(argv[1]) == 0)
 			{
 				printf("Error changing directory\n");
 			}
-			else
-			{
-				printf("Directory changed to: %s\n", argv[1]);
-			}
-			
+
 
 
 		}
@@ -96,7 +103,7 @@ int main() {
 		}
 
 		// ls command
-		if(strcmp(argv[0], "ls") == 0)
+		if (strcmp(argv[0], "ls") == 0)
 		{
 			ls();
 		}
@@ -106,9 +113,23 @@ int main() {
 
 		}
 
-		// 
-	}
+		if (strcmp(argv[0], "rmdir") == 0)
+		{
+			rmdir(argv[1]);
+		}
 
+		if (strcmp(argv[0], "clear") == 0)
+		{
+			system("cls");
+		}
+
+		if(strcmp(argv[0], "rename") == 0)
+		{
+			rename(argv[1], argv[2]);
+		}
+
+	}
+	
 
 	return 0;
 }
