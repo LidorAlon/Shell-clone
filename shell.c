@@ -3,11 +3,27 @@
 #include <string.h>
 #include <shlobj.h>
 
+void touch(char* filename)
+{
+	HANDLE hfile = CreateFileA(filename, GENERIC_WRITE, 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
 
-void rename(char* source, char* destination)
+	CloseHandle(hfile);
+}
+void cat(char* filename)
+{
+	HANDLE hfile = CreateFileA(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	char buffer[1024];
+	ReadFile(hfile, buffer, sizeof(buffer), NULL, NULL);
+
+	printf("%s\n", buffer);
+	CloseHandle(hfile);
+
+}
+void rn(char* source, char* destination)
 {
 	MoveFileA(source, destination);
 }
+
 void rmdir(char* name)
 {
 	RemoveDirectoryA(name);
@@ -123,13 +139,19 @@ int main() {
 			system("cls");
 		}
 
-		if(strcmp(argv[0], "rename") == 0)
+		if (strcmp(argv[0], "rn") == 0)
 		{
-			rename(argv[1], argv[2]);
+			rn(argv[1], argv[2]);
 		}
-
+		if (strcmp(argv[0], "cat") == 0)
+		{
+			cat(argv[1]);
+		}
+		if (strcmp(argv[0], "touch") == 0)
+		{
+			touch(argv[1]);
+		}
 	}
-	
 
 	return 0;
 }
