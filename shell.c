@@ -11,11 +11,12 @@ void touch(char* filename)
 }
 void cat(char* filename)
 {
+	int bytesread;
 	HANDLE hfile = CreateFileA(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	char buffer[1024];
-	ReadFile(hfile, buffer, sizeof(buffer), NULL, NULL);
+	ReadFile(hfile, buffer, sizeof(buffer), &bytesread, NULL);
 
-	printf("%s\n", buffer);
+	printf("%.*s\n", bytesread, buffer);
 	CloseHandle(hfile);
 
 }
