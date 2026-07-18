@@ -151,6 +151,10 @@ int main() {
 		{
 			touch(argv[1]);
 		}
+		if (strcmp(argv[0], "pwd") == 0) {
+			printf("%s\n", path);
+
+		}
 	}
 
 	return 0;
