@@ -4,12 +4,18 @@
 #include <shlobj.h>
 
 
-void mkdir(char* name)
+void help()
 {
 
+	printf("Available commands: \n");
+	printf("mkdir <name> - create new directory\n");
+	printf("ls - shows all the files in the current directory\n");
+	printf("cd <path> - change directory\n");
 
-
-
+}
+void mkdir(char* name)
+{
+	CreateDirectoryA(name, NULL);
 }
 
 void ls()
@@ -83,6 +89,10 @@ int main() {
 			
 
 
+		}
+		if (strcmp(argv[0], "help") == 0)
+		{
+			help();
 		}
 
 		// ls command
